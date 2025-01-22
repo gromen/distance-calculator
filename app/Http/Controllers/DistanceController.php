@@ -15,17 +15,17 @@ class DistanceController extends Controller
     public function calculate(Request $request): JsonResponse
     {
         $request->validate([
-            'start_lat' => 'required|numeric',
-            'start_lng' => 'required|numeric',
-            'end_lat' => 'required|numeric',
-            'end_lng' => 'required|numeric',
+            'startLat' => 'required|numeric',
+            'startLng' => 'required|numeric',
+            'endLat' => 'required|numeric',
+            'endLng' => 'required|numeric',
         ]);
 
         $distance = $this->calculator->calculate(
-            $request->start_lat,
-            $request->start_lng,
-            $request->end_lat,
-            $request->end_lng
+            $request->startLat,
+            $request->startLng,
+            $request->endLat,
+            $request->endLng
         );
 
         return response()->json($distance);
