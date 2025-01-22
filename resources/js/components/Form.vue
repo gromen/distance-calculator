@@ -1,0 +1,137 @@
+<template>
+  <form @submit.prevent="calculateDistance">
+    <div class="space-y-12">
+      <div class="border-b border-gray-900/10 pb-12">
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-3">
+            <label
+              for="startLat"
+              class="block text-sm/6 font-medium text-gray-900"
+              >Start Latitude</label
+            >
+            <div class="mt-2">
+              <input
+                type="number"
+                name="startLat"
+                step="0.000001"
+                min="-90"
+                max="90"
+                v-model="startLat"
+                id="startLat"
+                placeholder="Start Latitude"
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              />
+            </div>
+          </div>
+          <div class="sm:col-span-3">
+            <label
+              for="startLng"
+              class="block text-sm/6 font-medium text-gray-900"
+              >Start Longitude</label
+            >
+            <div class="mt-2">
+              <input
+                type="number"
+                name="startLng"
+                step="0.000001"
+                min="-180"
+                max="180"
+                v-model="startLng"
+                id="startLng"
+                placeholder="Start Latitude"
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              />
+            </div>
+          </div>
+          <div class="sm:col-span-3">
+            <label
+              for="endLat"
+              class="block text-sm/6 font-medium text-gray-900"
+              >End Latitude</label
+            >
+            <div class="mt-2">
+              <input
+                type="number"
+                name="endLat"
+                step="0.000001"
+                min="-90"
+                max="90"
+                v-model="endLat"
+                id="endLat"
+                placeholder="Start Latitude"
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              />
+            </div>
+          </div>
+          <div class="sm:col-span-3">
+            <label
+              for="endLng"
+              class="block text-sm/6 font-medium text-gray-900"
+              >End Longitude</label
+            >
+            <div class="mt-2">
+              <input
+                type="number"
+                name="endLng"
+                step="0.000001"
+                min="-180"
+                max="180"
+                v-model="endLng"
+                id="endLng"
+                placeholder="Start Latitude"
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 flex items-center justify-end gap-x-6">
+      <button
+        type="submit"
+        class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      >
+        Calculate Distance
+      </button>
+    </div>
+  </form>
+</template>
+
+<script lang="ts">
+  import { defineComponent } from 'vue';
+
+  export default defineComponent({
+    name: 'Form',
+
+    data() {
+      return {
+        startLat: 0 as number,
+        startLng: 0 as number,
+        endLat: 0 as number,
+        endLng: 0 as number,
+        distance: null as number | null,
+      };
+    },
+    methods: {
+      async calculateDistance() {
+        console.log(this.startLat, this.startLng, this.endLat, this.endLng);
+        try {
+          const response = await axios.post('/api/calculate-distance', {
+            startLat: Number(this.startLat),
+            startLng: Number(this.startLng),
+            endLat: Number(this.endLat),
+            endLng: Number(this.endLng),
+          });
+          console.log(response);
+        } catch (error) {
+          if (error.response) {
+            console.error('Błąd:', error.response.data);
+          } else {
+            console.error('Błąd:', error);
+          }
+        }
+      },
+    },
+  });
+</script>
