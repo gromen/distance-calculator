@@ -107,6 +107,9 @@
       >
         Calculate Distance
       </button>
+      <template v-if="distance">
+        {{ distance.meters }}
+      </template>
     </div>
   </form>
 </template>
@@ -125,7 +128,10 @@
         startLng: 0 as number,
         endLat: 0 as number,
         endLng: 0 as number,
-        distance: null as number | null,
+        distance: {
+          kilometers: 0 as number,
+          meters: 0 as number,
+        },
       };
     },
     computed: {
@@ -151,7 +157,8 @@
             endLat: Number(this.endLat),
             endLng: Number(this.endLng),
           });
-          console.log(response);
+          this.distance = response.data;
+          console.log('this.distance', this.distance);
         } catch (error) {
           if (error.response) {
             console.error('Błąd:', error.response.data);
