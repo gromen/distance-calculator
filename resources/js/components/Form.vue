@@ -21,9 +21,7 @@
               />
             </div>
             <template v-if="!validationResult.errors.startLat">
-              <p class="text-red-600">
-                Latitude should be range from (-90, 90)
-              </p>
+              <Error message="Latitude should be range from (-90, 90)" />
             </template>
           </div>
           <div class="sm:col-span-3">
@@ -44,9 +42,7 @@
               />
             </div>
             <template v-if="!validationResult.errors.startLng">
-              <p class="text-red-600">
-                Longtitude should be range from (-180, 180)
-              </p>
+              <Error message="Longtitude should be range from (-180, 180)" />
             </template>
           </div>
           <div class="sm:col-span-3">
@@ -67,9 +63,7 @@
               />
             </div>
             <template v-if="!validationResult.errors.endLat">
-              <p class="text-red-600">
-                Latitude should be range from (-90, 90)
-              </p>
+              <Error message="Latitude should be range from (-90, 90)" />
             </template>
           </div>
           <div class="sm:col-span-3">
@@ -90,9 +84,7 @@
               />
             </div>
             <template v-if="!validationResult.errors.endLng">
-              <p class="text-red-600">
-                Longtitude should be range from (-180, 180)
-              </p>
+              <Error message="Longtitude should be range from (-180, 180)" />
             </template>
           </div>
         </div>
@@ -118,10 +110,13 @@
   import { defineComponent } from 'vue';
   import axios from 'axios';
   import { validate } from '../validators/gpsValidators';
+  import Error from './Error.vue';
 
   export default defineComponent({
     name: 'Form',
-
+    components: {
+      Error,
+    },
     data() {
       return {
         startLat: 0 as number,
