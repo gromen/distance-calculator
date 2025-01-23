@@ -20,6 +20,11 @@
                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
             </div>
+            <template v-if="!validationResult.errors.startLat">
+              <p class="text-red-600">
+                Latitude should be range from (-90, 90)
+              </p>
+            </template>
           </div>
           <div class="sm:col-span-3">
             <label
@@ -34,10 +39,15 @@
                 step="0.00000001"
                 v-model="startLng"
                 id="startLng"
-                placeholder="Start Latitude"
+                placeholder="Start Longtitude"
                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
             </div>
+            <template v-if="!validationResult.errors.startLng">
+              <p class="text-red-600">
+                Longtitude should be range from (-180, 180)
+              </p>
+            </template>
           </div>
           <div class="sm:col-span-3">
             <label
@@ -56,6 +66,11 @@
                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
             </div>
+            <template v-if="!validationResult.errors.endLat">
+              <p class="text-red-600">
+                Latitude should be range from (-90, 90)
+              </p>
+            </template>
           </div>
           <div class="sm:col-span-3">
             <label
@@ -74,6 +89,11 @@
                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
             </div>
+            <template v-if="!validationResult.errors.endLng">
+              <p class="text-red-600">
+                Longtitude should be range from (-180, 180)
+              </p>
+            </template>
           </div>
         </div>
       </div>
@@ -81,8 +101,9 @@
 
     <div class="mt-6 flex items-center justify-end gap-x-6">
       <button
+        :disabled="!this.validationResult.isValid"
         type="submit"
-        class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        class="disabled:text-opacity-65 disabled:bg-opacity-65 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
       >
         Calculate Distance
       </button>
@@ -107,17 +128,22 @@
         distance: null as number | null,
       };
     },
-    methods: {
-      async calculateDistance() {
-        const { isValid: isValidCords, errors } = validate({
+    computed: {
+      validationResult() {
+        return validate({
           startLat: this.startLat,
           startLng: this.startLng,
           endLat: this.endLat,
           endLng: this.endLng,
         });
-        if (!isValidCords) {
-          console.log('errors', errors);
+      },
+    },
+    methods: {
+      async calculateDistance() {
+        if (!this.validationResult.isValid) {
+          return;
         }
+
         try {
           const response = await axios.post('/api/calculate-distance', {
             startLat: Number(this.startLat),
