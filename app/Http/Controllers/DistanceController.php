@@ -30,4 +30,4 @@ class DistanceController extends Controller
 
         return response()->json($distance);
     }
-}
+}   

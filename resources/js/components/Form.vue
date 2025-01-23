@@ -13,9 +13,7 @@
               <input
                 type="number"
                 name="startLat"
-                step="0.000001"
-                min="-90"
-                max="90"
+                step="0.00000001"
                 v-model="startLat"
                 id="startLat"
                 placeholder="Start Latitude"
@@ -33,9 +31,7 @@
               <input
                 type="number"
                 name="startLng"
-                step="0.000001"
-                min="-180"
-                max="180"
+                step="0.00000001"
                 v-model="startLng"
                 id="startLng"
                 placeholder="Start Latitude"
@@ -53,9 +49,7 @@
               <input
                 type="number"
                 name="endLat"
-                step="0.000001"
-                min="-90"
-                max="90"
+                step="0.00000001"
                 v-model="endLat"
                 id="endLat"
                 placeholder="Start Latitude"
@@ -73,9 +67,7 @@
               <input
                 type="number"
                 name="endLng"
-                step="0.000001"
-                min="-180"
-                max="180"
+                step="0.00000001"
                 v-model="endLng"
                 id="endLng"
                 placeholder="Start Latitude"
@@ -100,6 +92,8 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue';
+  import axios from 'axios';
+  import { validate } from '../validators/gpsValidators';
 
   export default defineComponent({
     name: 'Form',
@@ -115,7 +109,15 @@
     },
     methods: {
       async calculateDistance() {
-        console.log(this.startLat, this.startLng, this.endLat, this.endLng);
+        const { isValid: isValidCords, errors } = validate({
+          startLat: this.startLat,
+          startLng: this.startLng,
+          endLat: this.endLat,
+          endLng: this.endLng,
+        });
+        if (!isValidCords) {
+          console.log('errors', errors);
+        }
         try {
           const response = await axios.post('/api/calculate-distance', {
             startLat: Number(this.startLat),
