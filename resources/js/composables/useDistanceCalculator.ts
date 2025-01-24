@@ -1,7 +1,6 @@
 import { computed, ref } from 'vue';
-import { IGPSCoordinates } from '../types/gps.types';
-import axios from 'axios';
-import { fetchLocations, getNearbyPlaces } from '../utils/utils';
+import { IDistance, IGPSCoordinates } from '../types/types';
+import { calculateDistanceApi, fetchLocations } from '../utils/utils';
 import { validate } from '../validators/gpsValidators';
 
 export function useDistanceCalculator() {
@@ -13,7 +12,7 @@ export function useDistanceCalculator() {
   });
   const startLocation = ref<string | null>(null);
   const endLocation = ref<string | null>(null);
-  const distance = ref<{ meters: number } | null>(null);
+  const distance = ref<IDistance | null>(null);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
   const validationResult = computed(() => validate(coordinates.value));
@@ -26,18 +25,13 @@ export function useDistanceCalculator() {
       error.value = null;
 
       const [distanceResponse, locations] = await Promise.all([
-        axios.post('/api/calculate-distance', {
-          startLat: Number(coordinates.value.startLat),
-          startLng: Number(coordinates.value.startLng),
-          endLat: Number(coordinates.value.endLat),
-          endLng: Number(coordinates.value.endLng),
-        }),
+        calculateDistanceApi(coordinates.value),
         fetchLocations(coordinates.value),
       ]);
 
       startLocation.value = locations.start;
       endLocation.value = locations.end;
-      distance.value = distanceResponse.data;
+      distance.value = distanceResponse;
     } catch (e) {
       error.value =
         e instanceof Error ? e.message : 'Failed to calculate distance';

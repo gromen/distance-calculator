@@ -1,4 +1,4 @@
-import { IValidationResult, IGPSCoordinates } from '../types/gps.types';
+import { IValidationResult, IGPSCoordinates } from '../types/types';
 
 const LATITUDE = {
   MIN: -90,

@@ -15,4 +15,9 @@ export interface IValidationResult {
   };
 }
 
+export interface IDistance {
+  kilometers: number;
+  meters: number;
+}
+
 export type NumericValidationMethod = (input: number) => boolean;
