@@ -1,4 +1,9 @@
 <template>
+  <LocationNames
+    :start-location="startLocation"
+    :end-location="endLocation"
+    :distance="distance"
+  />
   <form @submit.prevent="calculateDistance">
     <div class="space-y-12">
       <div class="border-b border-gray-900/10 pb-12">
@@ -67,8 +72,9 @@
   import axios from 'axios';
   import { validate } from '../validators/gpsValidators';
   import type { IGPSCoordinates } from '../types/gps.types';
-  import Error from './Error.vue';
   import InputForm from './InputForm.vue';
+  import { getNearbyPlaces } from '../utils/utils';
+  import LocationNames from './LocationNames.vue';
 
   const coordinates = ref<IGPSCoordinates>({
     startLat: 0,
@@ -77,8 +83,9 @@
     endLng: 0,
   });
 
+  const startLocation = ref<string | null>(null);
+  const endLocation = ref<string | null>(null);
   const distance = ref<{ meters: number } | null>(null);
-
   const validationResult = computed(() => validate(coordinates.value));
 
   const calculateDistance = async () => {
@@ -94,8 +101,19 @@
         endLng: Number(coordinates.value.endLng),
       });
 
+      startLocation.value =
+        (await getNearbyPlaces(
+          coordinates.value.startLat,
+          coordinates.value.startLng
+        )) || 0;
+
+      endLocation.value =
+        (await getNearbyPlaces(
+          coordinates.value.endLat,
+          coordinates.value.endLng
+        )) || 0;
+
       distance.value = response.data;
-      console.log('distance', distance.value);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Błąd:', error.response?.data);
