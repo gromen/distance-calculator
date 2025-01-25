@@ -18,44 +18,15 @@
       <div class="border-b border-gray-900/10 pb-12">
         <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <InputForm
-            id="startLat"
-            name="startLat"
-            label="Start Latitude"
-            placeholder="Start Latitude"
-            error-message="Latitude should be range from (-90, 90)"
-            :is-valid="validationResult.errors.startLat"
-            :model-value="coordinates.startLat"
-            @update:model-value="coordinates.startLat = Number($event)"
-          />
-          <InputForm
-            id="startLng"
-            name="startLng"
-            label="Start Longitude"
-            placeholder="Start Longitude"
-            error-message="Longtitude should be range from (-180, 180)"
-            :is-valid="validationResult.errors.startLng"
-            :model-value="coordinates.startLng"
-            @update:model-value="coordinates.startLng = Number($event)"
-          />
-          <InputForm
-            id="endLat"
-            name="endLat"
-            label="End Latitude"
-            placeholder="End Latitude"
-            error-message="Latitude should be range from (-90, 90)"
-            :is-valid="validationResult.errors.endLat"
-            :model-value="coordinates.endLat"
-            @update:model-value="coordinates.endLat = Number($event)"
-          />
-          <InputForm
-            id="endLng"
-            name="endLng"
-            label="End Longtitude"
-            placeholder="End Longtitude"
-            error-message="Latitude should be range from (-90, 90)"
-            :is-valid="validationResult.errors.endLng"
-            :model-value="coordinates.endLng"
-            @update:model-value="coordinates.endLng = Number($event)"
+            v-for="input in formInputs"
+            :key="input.id"
+            :id="input.id"
+            :label="input.label"
+            :placeholder="input.placeholder"
+            :error-message="input.errorMessage"
+            :is-valid="validationResult.errors[input.coordKey]"
+            :model-value="coordinates[input.coordKey]"
+            @update:model-value="coordinates[input.coordKey] = Number($event)"
           />
         </div>
       </div>
@@ -78,6 +49,7 @@
   import LocationNames from './LocationNames.vue';
   import { useDistanceCalculator } from '../composables/useDistanceCalculator';
   import LoadingSpinner from './LoadingSpinner.vue';
+  import { formInputs } from '../config/formInputs';
 
   const {
     coordinates,
