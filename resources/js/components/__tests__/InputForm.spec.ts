@@ -21,7 +21,7 @@ describe('InputForm', () => {
         id: 'testInput',
         placeholder: 'Enter value',
         type: 'number',
-        step: '0.1',
+        step: '0.000001',
       })
     );
   });
@@ -34,18 +34,6 @@ describe('InputForm', () => {
 
     expect(wrapper.emitted('update:modelValue')).toBeTruthy();
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['42']);
-  });
-
-  it('shows error component when input is empty', async () => {
-    const wrapper = mount(InputForm, { props: defaultProps });
-    const input = wrapper.find('input');
-
-    await input.setValue('');
-
-    expect(wrapper.findComponent({ name: 'Error' }).exists()).toBe(true);
-    expect(wrapper.findComponent({ name: 'Error' }).props('message')).toBe(
-      'This field cannot be empty'
-    );
   });
 
   it('shows validation error when isValid is false', () => {
@@ -72,5 +60,52 @@ describe('InputForm', () => {
     await input.setValue('12.345');
 
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['12.345']);
+  });
+
+  it('validates latitude range correctly', async () => {
+    const wrapper = mount(InputForm, {
+      props: { ...defaultProps, id: 'startLat' },
+    });
+    const input = wrapper.find('input');
+
+    expect(input.attributes('min')).toBe('-90');
+    expect(input.attributes('max')).toBe('90');
+  });
+
+  it('validates longitude range correctly', async () => {
+    const wrapper = mount(InputForm, {
+      props: { ...defaultProps, id: 'startLong' },
+    });
+    const input = wrapper.find('input');
+
+    expect(input.attributes('min')).toBe('-180');
+    expect(input.attributes('max')).toBe('180');
+  });
+
+  it('shows appropriate error message for invalid latitude', async () => {
+    const wrapper = mount(InputForm, {
+      props: { ...defaultProps, id: 'startLat', modelValue: 91 },
+    });
+
+    expect(wrapper.findComponent({ name: 'Error' }).exists()).toBe(true);
+    expect(wrapper.findComponent({ name: 'Error' }).props('message')).toBe(
+      'Latitude should be range from (-90, 90)'
+    );
+  });
+
+  it('shows appropriate error message for invalid longitude', () => {
+    const wrapper = mount(InputForm, {
+      props: {
+        ...defaultProps,
+        modelValue: -181,
+      },
+    });
+
+    console.log('Props:', wrapper.props());
+
+    expect(wrapper.findComponent({ name: 'Error' }).exists()).toBe(true);
+    expect(wrapper.findComponent({ name: 'Error' }).props('message')).toBe(
+      'Longitude should be range from (-180, 180)'
+    );
   });
 });

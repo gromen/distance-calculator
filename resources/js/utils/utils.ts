@@ -4,7 +4,7 @@ import { IGPSCoordinates } from '../types/types';
 export const getNearbyPlaces = async (lat: number, lng: number) => {
   try {
     const response = await axios.get(
-      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat.toFixed(7)}&lon=${lng.toFixed(7)}`
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat.toFixed(6)}&lon=${lng.toFixed(6)}`
     );
 
     if (response.data.error) {

@@ -1,16 +1,14 @@
 <template>
-  <Suspense>
-    <template #default>
-      <LocationNames
-        :start-location="startLocation"
-        :end-location="endLocation"
-        :distance="distance"
-      />
-    </template>
-    <template #fallback>
-      <LoadingSpinner />
-    </template>
-  </Suspense>
+  <template v-if="!isLoading">
+    <LocationNames
+      :start-location="startLocation"
+      :end-location="endLocation"
+      :distance="distance"
+    />
+  </template>
+  <template v-else>
+    <LoadingSpinner />
+  </template>
   <p v-if="error" class="text-red-700">{{ error }}</p>
 
   <form @submit.prevent="calculateDistance">
