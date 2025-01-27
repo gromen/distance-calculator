@@ -34,7 +34,10 @@
       <button
         :disabled="!validationResult.isValid"
         type="submit"
-        class="disabled:text-opacity-65 disabled:bg-opacity-65 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        :class="[
+          BUTTON_CLASSES.primary,
+          !validationResult.isValid && BUTTON_CLASSES.disabled,
+        ]"
       >
         {{ isLoading ? 'Calculating...' : 'Calculate Distance' }}
       </button>
@@ -48,6 +51,7 @@
   import { useDistanceCalculator } from '../composables/useDistanceCalculator';
   import LoadingSpinner from './LoadingSpinner.vue';
   import { formInputs } from '../config/formInputs';
+  import { BUTTON_CLASSES } from '../styles/constants';
 
   const {
     coordinates,
