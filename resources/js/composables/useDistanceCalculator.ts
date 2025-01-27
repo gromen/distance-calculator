@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue';
 import { IDistance, IGPSCoordinates } from '../types/types';
-import { calculateDistanceApi, fetchLocations } from '../utils/utils';
+import { calculateDistanceApi, fetchLocations } from '../config/api';
 import { validate } from '../validators/gpsValidators';
 
 export function useDistanceCalculator() {

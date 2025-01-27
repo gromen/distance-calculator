@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useDistanceCalculator } from '../../composables/useDistanceCalculator';
-import { calculateDistanceApi, fetchLocations } from '../../utils/utils';
+import { calculateDistanceApi, fetchLocations } from '../../config/api';
 
 // Mock external dependencies
-vi.mock('../../utils/utils', () => ({
+vi.mock('../../config/api', () => ({
   calculateDistanceApi: vi.fn(),
   fetchLocations: vi.fn(),
 }));

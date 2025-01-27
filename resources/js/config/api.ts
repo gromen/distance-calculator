@@ -59,8 +59,6 @@ export const fetchLocations = async (
       getNearbyPlaces(coordinates.endLat, coordinates.endLng),
     ]);
 
-    console.log('startPlaces', startPlaces);
-
     return {
       start:
         startPlaces.features[0]?.properties.display_name || 'Unknown location',
@@ -68,7 +66,6 @@ export const fetchLocations = async (
     };
   } catch (error) {
     if (axios.isAxiosError<IAPIError>(error)) {
-      console.log('error', error);
       throw new Error(
         error.response?.data.message || 'Failed to fetch locations'
       );
